@@ -42,9 +42,11 @@ public class BooleanWiresScript : MonoBehaviour {
 	public bool isNandUsed = false;
 
 
+	void Start(){
+		OriginalTime = Bomb.GetTime();
+	}
 
 	void Awake() {
-		OriginalTime = Bomb.GetTime();
         letters.Add("A");
         letters.Add("B");
         letters.Add("C");
@@ -253,7 +255,7 @@ public class BooleanWiresScript : MonoBehaviour {
 					}
 					else{
 						if((notCuts.Count==1 && notCuts.Contains(1)) || (notCuts.Count==1 && notCuts.Contains(3))){
-						return "NAND";
+						return "NAND";	
 					}
 						else{
 						return "Invalid";
