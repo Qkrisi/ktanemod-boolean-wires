@@ -41,12 +41,15 @@ public class BooleanWiresScript : MonoBehaviour {
 	public bool isOrUsed = false;
 	public bool isNandUsed = false;
 
+	static int moduleIdCounter;
+	int moduleId;
 
 	void Start(){
 		OriginalTime = Bomb.GetTime();
 	}
 
 	void Awake() {
+		moduleId=moduleIdCounter++;
         letters.Add("A");
         letters.Add("B");
         letters.Add("C");
@@ -82,6 +85,7 @@ public class BooleanWiresScript : MonoBehaviour {
 		notCuts.Add(5);
 		notCuts.Add(6);
 		notCuts.Add(7);
+		notCuts.Add(8);
 		
 		mesh = CutWire.GetComponent<MeshFilter>().sharedMesh;
         cutMesh = Instantiate(mesh);
@@ -134,6 +138,11 @@ public class BooleanWiresScript : MonoBehaviour {
 				snipWire(7);
 				return false;
 			};
+		Wires[8].OnInteract += delegate(){
+				Wires[8].AddInteractionPunch(.5f);
+				snipWire(8);
+				return false;
+			};
 
 		FalseWire.OnInteract += delegate(){
 			GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, transform);
@@ -146,6 +155,7 @@ public class BooleanWiresScript : MonoBehaviour {
 			Wires[5].GetComponent<MeshFilter>().sharedMesh = noncutMesh;
 			Wires[6].GetComponent<MeshFilter>().sharedMesh = noncutMesh;
 			Wires[7].GetComponent<MeshFilter>().sharedMesh = noncutMesh;
+			Wires[8].GetComponent<MeshFilter>().sharedMesh = noncutMesh;
 			notCuts.Clear();
 			notCuts.Add(0);
 			notCuts.Add(1);
@@ -155,6 +165,7 @@ public class BooleanWiresScript : MonoBehaviour {
 			notCuts.Add(5);
 			notCuts.Add(6);
 			notCuts.Add(7);
+			notCuts.Add(8);
 			return false;
 		};
 
@@ -162,16 +173,19 @@ public class BooleanWiresScript : MonoBehaviour {
 			if(!solved){
 			TrueWire.AddInteractionPunch(.5f);
 			input = Numerate();
+			Debug.LogFormat("[Boolean Wires #{0}] Entered operator: {1}", moduleId, input);
 			Entered.Add(input);
 			//Debug.LogFormat("[Boolean Wires #{0}] Got operator: " + input, 1);
 			Calculate();
 			if(Corrects.Contains(input)){
+				Debug.LogFormat("[Boolean Wires #{0}] Correct!", moduleId);
 				if(input=="OR"){isOrUsed=true;}
 				if(input=="NAND"){isNandUsed=true;}
 				Entered.Add(input);
 				generateNew();
 			}
 			else{
+				Debug.LogFormat("[Boolean Wires #{0}] Incorrect!", moduleId);
 				stageNumber=0;
 				Entered.Clear();
 				isOrUsed = false;
@@ -193,7 +207,7 @@ public class BooleanWiresScript : MonoBehaviour {
 		if(first ^ second){Corrects.Add("XOR");}
 		if(first && second){Corrects.Add("AND");}
 		if(first || second){if(!isOrUsed){Corrects.Add("OR");}}
-		if(!first && !second){Corrects.Add("NOT");}
+		if(!first && !second){Corrects.Add("NOR");}
 		if(!(first && second)){if(!isNandUsed){Corrects.Add("NAND");}}
 	}
 
@@ -232,6 +246,7 @@ public class BooleanWiresScript : MonoBehaviour {
 			thirdentered=Entered[2];
 			fourthentered=Entered[3];
 			fifthentered=Entered[4];
+			Debug.LogFormat("[Boolean Wires #{0}] Module solved!", moduleId);
 			GetComponent<KMBombModule>().HandlePass();
 		}
 	}
@@ -250,8 +265,8 @@ public class BooleanWiresScript : MonoBehaviour {
 					return "XOR";
 				}
 				else{
-					if(notCuts.Count==2 && notCuts.Contains(0) && notCuts.Contains(1)){
-						return "NOT";
+					if(notCuts.Count==3 && notCuts.Contains(8) && notCuts.Contains(4) && notCuts.Contains(5)){
+						return "NOR";
 					}
 					else{
 						if((notCuts.Count==1 && notCuts.Contains(1)) || (notCuts.Count==1 && notCuts.Contains(3))){
@@ -416,7 +431,7 @@ public class BooleanWiresScript : MonoBehaviour {
 		}
 	}
 
-	public string TwitchHelpMessage = "Use '!{0} submit <operator>' to submit the specified operator! Valid operators are: OR; XOR; AND; NAND; NOT.";
+	public string TwitchHelpMessage = "Use '!{0} submit <operator>' to submit the specified operator! Valid operators are: OR; XOR; AND; NAND; NOR.";
     IEnumerator ProcessTwitchCommand(string command)
     {
 		yield return null;
@@ -427,6 +442,7 @@ public class BooleanWiresScript : MonoBehaviour {
 			Wires[3].OnInteract();
 			Wires[6].OnInteract();
 			Wires[7].OnInteract();
+			Wires[8].OnInteract();
 			TrueWire.OnInteract();
 		}
 		if(command.Equals("submit and", StringComparison.InvariantCultureIgnoreCase)){
@@ -436,6 +452,7 @@ public class BooleanWiresScript : MonoBehaviour {
 			Wires[3].OnInteract();
 			Wires[4].OnInteract();
 			Wires[5].OnInteract();
+			Wires[8].OnInteract();
 			TrueWire.OnInteract();
 		}
 		if(command.Equals("submit xor", StringComparison.InvariantCultureIgnoreCase)){
@@ -444,13 +461,14 @@ public class BooleanWiresScript : MonoBehaviour {
 			Wires[3].OnInteract();
 			Wires[6].OnInteract();
 			Wires[7].OnInteract();
+			Wires[8].OnInteract();
 			TrueWire.OnInteract();
 		}
-		if(command.Equals("submit not", StringComparison.InvariantCultureIgnoreCase)){
+		if(command.Equals("submit nor", StringComparison.InvariantCultureIgnoreCase)){
+			Wires[0].OnInteract();
+			Wires[1].OnInteract();
 			Wires[2].OnInteract();
 			Wires[3].OnInteract();
-			Wires[4].OnInteract();
-			Wires[5].OnInteract();
 			Wires[6].OnInteract();
 			Wires[7].OnInteract();
 			TrueWire.OnInteract();
@@ -463,6 +481,7 @@ public class BooleanWiresScript : MonoBehaviour {
 			Wires[5].OnInteract();
 			Wires[6].OnInteract();
 			Wires[7].OnInteract();
+			Wires[8].OnInteract();
 			TrueWire.OnInteract();
 		}
 	}

@@ -259,12 +259,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114670087543436466, guid: 59ef72eff6d134568ad73d98ac9364de,
-        type: 2}
-      propertyPath: TwitchHelpMessage
-      value: 'Use ''!{0} submit <operator>'' to submit the specified operator! Valid
-        operators are: OR; XOR; AND; NAND; NOT.'
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 59ef72eff6d134568ad73d98ac9364de, type: 2}
   m_IsPrefabParent: 0
