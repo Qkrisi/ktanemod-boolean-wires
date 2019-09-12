@@ -269,7 +269,7 @@ public class BooleanWiresScript : MonoBehaviour {
 						return "NOR";
 					}
 					else{
-						if((notCuts.Count==1 && notCuts.Contains(1)) || (notCuts.Count==1 && notCuts.Contains(3))){
+						if((notCuts.Count==1 && notCuts.Contains(1)) || (notCuts.Count==1 && notCuts.Contains(3)) || (notCuts.Count==1 && notCuts.Contains(8))){
 						return "NAND";	
 					}
 						else{
