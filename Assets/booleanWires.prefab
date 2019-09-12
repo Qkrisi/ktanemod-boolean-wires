@@ -2421,7 +2421,7 @@ MonoBehaviour:
   isOrUsed: 0
   isNandUsed: 0
   TwitchHelpMessage: 'Use ''!{0} submit <operator>'' to submit the specified operator!
-    Valid operators are: OR; XOR; AND; NAND; NOT.'
+    Valid operators are: OR; XOR; AND; NAND; NOR.'
 --- !u!114 &114683327982267196
 MonoBehaviour:
   m_ObjectHideFlags: 1
