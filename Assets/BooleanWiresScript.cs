@@ -351,7 +351,7 @@ public class BooleanWiresScript : MonoBehaviour {
 				if((Bomb.GetModuleNames().Count) %3 == 0){temp=true;}
 				break;
 			case "S":
-				if((Bomb.GetModuleNames().Count) > ((Bomb.GetTime()) / 60)){temp=true;}
+				if((Bomb.GetModuleNames().Count) > (OriginalTime / 60)){temp=true;}
 				break;
 			case "T":
 				if((Bomb.GetModuleNames().Count) >71){temp=true;}
